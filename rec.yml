@@ -1,0 +1,6 @@
+dnssec:
+  validation: process-no-validate
+recursor:
+  etc_hosts_file: /etc/powerdns/recursor.d/hosts
+  export_etc_hosts: True
+  hint_file: /etc/powerdns/recursor.d/OpenNIC
