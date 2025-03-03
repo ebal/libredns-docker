@@ -6,15 +6,15 @@ services:
       - path: ./default.env
         required: true
     command: >
-      bash -c "mkdir -p recursor.d && cd recursor.d
-      && apk add -q curl bind-tools
-      && curl -sO https://raw.githubusercontent.com/ebal/libredns-docker/refs/heads/main/get_files.sh
-      && bash get_files.sh"
+      bash -c "mkdir -p recursor.d && cd recursor.d &&
+      apk add -q curl bind-tools &&
+      curl -sO https://raw.githubusercontent.com/ebal/libredns-docker/refs/heads/main/get_files.sh &&
+      bash get_files.sh"
     working_dir: /tmp
     volumes:
       - ./:/tmp
     healthcheck:
-      test: ["CMD", "test", "-f", "/tmp/OpenNIC"]
+      test: ["CMD", "test", "-f", "/tmp/recursor.d/OpenNIC"]
       interval: 10s
       timeout: 5s
       retries: 5
