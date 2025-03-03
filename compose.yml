@@ -1,0 +1,36 @@
+---
+services:
+  bash:
+    image: bash
+    env_file:
+      - path: ./default.env
+        required: true
+    command: >
+      bash -c "mkdir -p recursor.d && cd recursor.d
+      && apk add -q curl bind-tools
+      && curl -sO https://raw.githubusercontent.com/ebal/libredns-docker/refs/heads/main/get_files.sh
+      && bash get_files.sh"
+    working_dir: /tmp
+    volumes:
+      - ./:/tmp
+    healthcheck:
+      test: ["CMD", "test", "-f", "/tmp/OpenNIC"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  pdns-rec:
+    image: powerdns/pdns-recursor-52
+    hostname: pdns-rec
+    container_name: pdns-rec
+    depends_on:
+      bash:
+        condition: service_completed_successfully
+    env_file:
+      - path: ./default.env
+        required: true
+    ports:
+      - "1053:53/udp"
+    volumes:
+      - ./recursor.d:/etc/powerdns/recursor.d:ro
